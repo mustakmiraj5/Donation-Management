@@ -2,10 +2,18 @@ import { Suspense } from "react"
 import type { Metadata } from "next"
 import MultiSelect from "@/components/common/MultiSelect"
 const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' }
+    { value: 'january', label: 'January' },
+    { value: 'february', label: 'February' },
+    { value: 'march', label: 'March' },
+    { value: 'april', label: 'April' },
+    { value: 'may', label: 'May' },
+    { value: 'june', label: 'June' },
+    { value: 'july', label: 'July' },
+    { value: 'august', label: 'August' },
+    { value: 'september', label: 'September' },
+    { value: 'october', label: 'October' },
+    { value: 'november', label: 'November' },
+    { value: 'december', label: 'December' }
 ]
 
 export const metadata: Metadata = {
@@ -17,8 +25,8 @@ export default function DashboardPage() {
   return (
     <>
     <p>Welcome</p>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    <MultiSelect options={options} />
+    <div className="flex flex-col items-center min-h-[70px] mt-10">
+    <MultiSelect options={options}  heading={"Select Month"} onChange={(selected) => console.log(selected)} />
     </div>
     </>
   )
