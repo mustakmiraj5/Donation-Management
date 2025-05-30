@@ -1,4 +1,5 @@
-import { Suspense } from "react"
+"use client"
+import { Suspense, useState } from "react"
 import type { Metadata } from "next"
 import MultiSelect from "@/components/common/MultiSelect"
 const options = [
@@ -16,17 +17,23 @@ const options = [
     { value: 'december', label: 'December' }
 ]
 
-export const metadata: Metadata = {
-  title: "Donation Management System",
-  description: "A comprehensive donation management system with dashboard",
-}
+// export const metadata: Metadata = {
+//   title: "Donation Management System",
+//   description: "A comprehensive donation management system with dashboard",
+// }
 
 export default function DashboardPage() {
+  const [formData, setFormData] = useState({ selectedMonths: [] as string[] });
+
+  const handleForm = (selected: string[]) => {
+    setFormData({ ...formData, selectedMonths: selected });
+    console.log("Form Data: ", { ...formData, selectedMonths: selected });
+  }
   return (
     <>
     <p>Welcome</p>
     <div className="flex flex-col items-center min-h-[70px] mt-10">
-    <MultiSelect options={options}  heading={"Select Month"} onChange={(selected) => console.log(selected)} />
+    <MultiSelect options={options}  heading={"Select Month"} onChange={handleForm} />
     </div>
     </>
   )
