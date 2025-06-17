@@ -11,6 +11,7 @@ type Donor = {
   medium_name: string;
   medium_number: string;
   donor_id?: string | number;
+  promised_amount?: number;
   created_at?: string;
 };
 
