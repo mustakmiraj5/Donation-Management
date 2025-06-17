@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react'
+import { supabase } from '@/lib/supabaseClient';
 
 interface FormData {
   donorId: string | number | readonly string[] | undefined;
@@ -26,11 +27,44 @@ export default function Page() {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
-   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission logic here
-  };
+   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  console.log('Form submitted:', formData);
+
+  const { donorId, address, name, mediumName, phone, mediumPhone } = formData;
+
+  const { data, error } = await supabase
+    .from('donor')
+    .insert([
+      {
+        donor_id: donorId,        // Adjust these field names based on your DB schema
+        address: address,
+        name: name,
+        medium_name: mediumName,
+        phone: phone,
+        medium_phone: mediumPhone
+      }
+    ])
+    .select();
+
+  if (error) {
+    console.error('Error inserting donor:', error.message);
+    alert('Failed to add donor.');
+  } else {
+    console.log('Donor added:', data);
+    alert('Donor added successfully!');
+    // Optionally reset form
+    setFormData({
+      address: '',
+      name: '',
+      mediumName: '',
+      phone: '',
+      donorId: '',
+      mediumPhone: ''
+    });
+  }
+};
+
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
         <div className='text-center text-4xl p-2 my-2'>Provide donor information</div>
