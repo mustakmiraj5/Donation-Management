@@ -2,20 +2,21 @@
 import { Suspense, useState } from "react"
 import type { Metadata } from "next"
 import MultiSelect from "@/components/common/MultiSelect"
-const options = [
-    { value: 'january', label: 'January' },
-    { value: 'february', label: 'February' },
-    { value: 'march', label: 'March' },
-    { value: 'april', label: 'April' },
-    { value: 'may', label: 'May' },
-    { value: 'june', label: 'June' },
-    { value: 'july', label: 'July' },
-    { value: 'august', label: 'August' },
-    { value: 'september', label: 'September' },
-    { value: 'october', label: 'October' },
-    { value: 'november', label: 'November' },
-    { value: 'december', label: 'December' }
-]
+import DonorList from "@/components/DonorList";
+// const options = [
+//     { value: 'january', label: 'January' },
+//     { value: 'february', label: 'February' },
+//     { value: 'march', label: 'March' },
+//     { value: 'april', label: 'April' },
+//     { value: 'may', label: 'May' },
+//     { value: 'june', label: 'June' },
+//     { value: 'july', label: 'July' },
+//     { value: 'august', label: 'August' },
+//     { value: 'september', label: 'September' },
+//     { value: 'october', label: 'October' },
+//     { value: 'november', label: 'November' },
+//     { value: 'december', label: 'December' }
+// ]
 
 // export const metadata: Metadata = {
 //   title: "Donation Management System",
@@ -31,9 +32,9 @@ export default function DashboardPage() {
   }
   return (
     <>
-    <p>Welcome</p>
-    <div className="flex flex-col items-center min-h-[70px] mt-10">
-    <MultiSelect options={options}  heading={"Select Month"} onChange={handleForm} />
+    <div className="flex flex-col items-center mt-10">
+    {/* <MultiSelect options={options}  heading={"Select Month"} onChange={handleForm} /> */}
+    <DonorList />
     </div>
     </>
   )
