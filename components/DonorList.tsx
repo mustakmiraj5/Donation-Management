@@ -18,6 +18,7 @@ type Donor = {
 export default function DonorList() {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [connectionStatus, setConnectionStatus] = useState<
     "connecting" | "connected" | "disconnected"
@@ -100,8 +101,17 @@ export default function DonorList() {
     );
   }
 
+  const filteredDonors = donors.filter((donor) => {
+  const query = searchQuery.toLowerCase();
   return (
-    <div className="mt-6">
+    donor.name.toLowerCase().includes(query) ||
+    donor.donor_id?.toString().toLowerCase().includes(query)
+  );
+});
+
+
+  return (
+    <div className="my-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Donor List ({donors.length})</h2>
         <div className="flex items-center space-x-3">
@@ -137,35 +147,46 @@ export default function DonorList() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="mt-2 text-gray-600">Loading donors...</p>
         </div>
-      ) : donors.length === 0 ? (
+      ) : filteredDonors.length === 0  ? (
         <div className="text-center py-8 text-gray-500">
-          <p>No donors found. Add your first donor!</p>
-        </div>
+        <p>No donors match your search.</p>
+      </div>
       ) : (
         <div className="space-y-3">
-          {donors.map((donor) => (
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by Donor ID or Name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring focus:border-green-600"
+            />
+          </div>
+
+          {
+          filteredDonors.map((donor) => (
             <div
               key={donor.id}
               className="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md"
             >
               <div className="flex flex-col justify-between items-start">
                 <div className="space-y-1">
-                  <h3 className="font-medium text-gray-900">{donor.name}</h3>
-                  <p className="text-sm text-gray-600">Phone: {donor.number}</p>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="font-bold text-gray-900">{donor.name}</h3>
+                  <p className="text-sm text-gray-900">Phone: {donor.number}</p>
+                  <p className="text-sm text-gray-900">
                     Medium: {donor.medium_name} ({donor.medium_number})
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-900">
                     Address: {donor.address}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-900">
                     Donor ID:{" "}
                     <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
                       {donor.donor_id}
                     </span>
                   </p>
                   {donor.promised_amount !== null && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-900">
                       Promised Amount:{" "}
                       <span className="font-bold text-green-700">
                         ৳ {(donor.promised_amount ?? 0).toLocaleString()}
@@ -174,7 +195,7 @@ export default function DonorList() {
                   )}
 
                   {donor.created_at && (
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-sm text-gray-900 mt-1">
                       Added: {new Date(donor.created_at).toLocaleString()}
                     </p>
                   )}

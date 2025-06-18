@@ -14,7 +14,6 @@ const generateYearOptions = () => {
   return years;
 };
 
-
 const allMonthOptions = [
   { value: "january", label: "January" },
   { value: "february", label: "February" },
@@ -33,6 +32,7 @@ const allMonthOptions = [
 type Donor = {
   id: string;
   name: string;
+  donor_id?: string | number;
 };
 
 export default function AddDonationPage() {
@@ -57,7 +57,7 @@ export default function AddDonationPage() {
     async function fetchDonors() {
       const { data, error } = await supabase
         .from("donor")
-        .select("id, name")
+        .select("id, name, donor_id")
         .order("created_at", { ascending: false });
       if (!error && data) setDonors(data);
     }
@@ -143,9 +143,13 @@ export default function AddDonationPage() {
   };
 
   // Filter donor dropdown by keyword
-  const filteredDonors = donors.filter((d) =>
-    d.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredDonors = donors.filter((d) => {
+    const query = search.toLowerCase();
+    return (
+      d.name.toLowerCase().includes(query) ||
+      d.donor_id?.toString().toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
@@ -163,7 +167,7 @@ export default function AddDonationPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search donor by name..."
+            placeholder="Search donor by name or donor id..."
             className="w-full px-3 py-2 border rounded-md border-gray-300"
           />
         </div>
@@ -180,7 +184,7 @@ export default function AddDonationPage() {
             <option value="">-- Choose donor --</option>
             {filteredDonors.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name}
+                {d.name} {d.donor_id ? `(ID: ${d.donor_id})` : ""}
               </option>
             ))}
           </select>
@@ -188,24 +192,23 @@ export default function AddDonationPage() {
 
         {/* Year Input */}
         <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">
-    Select Year
-  </label>
-  <select
-    name="year"
-    value={form.year}
-    onChange={handleChange}
-    className="w-full px-3 py-2 border rounded-md border-gray-300"
-  >
-    <option value="">-- Choose year --</option>
-    {generateYearOptions().map((year) => (
-      <option key={year} value={year}>
-        {year}
-      </option>
-    ))}
-  </select>
-</div>
-
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Select Year
+          </label>
+          <select
+            name="year"
+            value={form.year}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-md border-gray-300"
+          >
+            <option value="">-- Choose year --</option>
+            {generateYearOptions().map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Month Selector */}
         <div>
